@@ -7,3 +7,17 @@
 
 *.m4v
 
+*.mwb
+
+*.bak
+
+lib/bootstrap/*
+
+*.jpeg
+
+*.jpg
+
+*.png
+
+
+
