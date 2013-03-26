@@ -15,6 +15,77 @@ if(file_exists("$current_dir/lib/DBconn.php")) {
 }
 
 /* *********************
+* login()
+************************ */
+function login($email, $password) {
+  global $myConn, $db, $current_dir;
+
+  $new_password = encrypt($email, $password);
+  // $new_password = $password;
+  // var_dump($new_password); exit;
+
+  $sql = "SELECT user_rights
+           FROM  user
+           WHERE email = ?
+           AND   password = ?";
+
+  $stmt = $myConn->prepare($sql);
+
+  if ($stmt) {
+    $stmt->bind_param('ss', $email, $new_password);
+    $stmt->bind_result($rights);
+    $stmt->execute();
+    if($stmt->fetch()) {
+      $user_rights = $rights;
+    }
+    $stmt->close();
+  } else {
+    // $_SESSION['error'] = __FILE__." ".__FUNCTION__." stmt did not prepare.";
+    // echo "500 Error!";
+    include_once $current_dir.'/views/errorDocs/500.php';
+    exit;
+  } //end prepared stmt
+
+  if (!empty($user_rights)) {
+    return $user_rights;
+  } else {
+
+    $sql = "INSERT INTO user
+          ( user_id
+          , email
+          , password
+          , user_rights
+          , created_by
+          , creation_date
+          , last_updated_by
+          , last_update_date )
+          VALUES
+          ( NULL, ?, ?, 0, 1, NOW(), 1, NOW())";
+
+    $stmt = $myConn->prepare($sql);
+
+    if ($stmt) {
+      $stmt->bind_param('ss', $email, $new_password);
+      $stmt->execute();
+      $rowschanged = $stmt->affected_rows;
+      $stmt->close();
+    } else {
+      // $_SESSION['error'] = __FILE__." ".__FUNCTION__." stmt did not prepare.";
+      echo "500 Error! I-USER";
+      include_once $current_dir.'/views/errorDocs/500.php';
+      exit;
+    } //end prepared stmt
+
+    if ($rowschanged == 1) {
+      return 0;
+    } else {
+      return FALSE;
+    }
+  }
+
+} // end function
+
+/* *********************
 * get_video_by_id()
 ************************ */
 function get_video_by_id($video_id) {
@@ -244,9 +315,18 @@ function get_suggestions() {
 } // end function
 
 
-
-
-
+/* *********************
+* encrypt()
+************************ */
+function encrypt($email, $password) {
+  $salt = hash('sha256', 'kimclaireandi' . strtolower($email));
+  $hash = $salt . $password;
+  for ($i=0;$i<1000;$i++) {
+    $hash = hash('sha256', $hash);
+  }
+  $hash = $salt . $hash;
+  return $hash;
+}
 
 
 

@@ -8,6 +8,11 @@
 session_start();
 $_SESSION['session_id'] = session_id();
 
+if (!isset($_SESSION['rights'])) {
+	$_SESSION['rights'] = 0;
+}
+
+
 // GLOBAL DECLARATIONS
 $current_dir = $_SERVER['DOCUMENT_ROOT']; // gets current directory name
 
@@ -45,6 +50,47 @@ if (!empty($_POST['action'])) {
 * COMMENT GOES HERE
 **************************************************************************** */
 if ($action == 'home') {
+
+	include $current_dir.'/views/home.php';
+	exit;
+}
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
+// ----------------------------------------------------------------------------
+/* ****************************************************************************
+* COMMENT GOES HERE
+**************************************************************************** */
+else if ($action == 'logout') {
+
+	$_SESSION['rights'] = 0;
+
+	$_SESSION['error'] = 'Logout Success!';
+
+	include $current_dir.'/views/home.php';
+	exit;
+}
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
+// ----------------------------------------------------------------------------
+/* ****************************************************************************
+* COMMENT GOES HERE
+**************************************************************************** */
+else if ($action == 'login') {
+
+	$email = string_check($_POST['email']);
+	$password = string_check($_POST['password']);
+
+	$user_rights = login($email, $password);
+
+	if ($user_rights === FALSE) {
+		$_SESSION['rights'] = 0;
+		$_SESSION['error'] = 'Login Failed. Please try again. OR Please enter valid byui email address.';
+	} else {
+		$_SESSION['rights'] = $user_rights;
+		$_SESSION['error'] = 'Login Success!';
+	}
 
 	include $current_dir.'/views/home.php';
 	exit;
@@ -179,7 +225,7 @@ else if ($action == 'video_link') {
 * COMMENT GOES HERE
 **************************************************************************** */
 else {
-	$_SESSION['error'] = 'No Action performed.';
+	// $_SESSION['error'] = 'No Action performed.';
 	include $current_dir.'/views/home.php';
 	exit;
 }

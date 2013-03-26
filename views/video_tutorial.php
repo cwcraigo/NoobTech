@@ -20,7 +20,7 @@ if (isset($_SESSION['video_array'])) {
 <!-- LEFT COL (form/videos) -->
 <!-- <div class="span4"> -->
 
-<!-- <div class='page-header'><h2>Find A Video</h2></div> -->
+<!-- <div class='page-header'><h3>Find A Video</h3></div> -->
 
 <!--   <form class='form-search'>
     <div class='input-append'>
@@ -43,29 +43,32 @@ if (isset($_SESSION['video_array'])) {
 <!-- RIGHT COL (suggestions/comments) -->
 <div class="span10 offset1" >
 
-  <div class='page-header'> <h2>Videos</h2> </div>
+  <div class='page-header'> <h3>Videos</h3> </div>
 
   <p class='text-error' > <?php if($error){ echo $error; unset($error); } ?> </p>
 
   <!-- <div id='video_list' style='border:solid thin yellow;'></div> -->
-
+  <dl>
 <?php
 
     foreach ($video_array as $video) {
 
-        echo "
-        <dl>
-            <dt class='video_title' >
+      echo "<dt class='video_title' >
                 <a href='/index.php?action=video_link&video_id=$video[video_id]' >$video[video_title]</a></dt>
             <dd class='video_desc' >$video[video_desc]</dd>
-            <dd class='video_length' >Video Length: $video[video_length]</dd>
-            <dd class='creation_date' >$video[creation_date]</dd>
-        </dl>";
+            <dd class='video_length' >Video Length: $video[video_length]</dd>";
+
+      if ($_SESSION['rights'] == 1) {
+        echo "<button class='btn btn-danger btn-mini' >Edit</button>
+              <button class='btn btn-danger btn-mini' >Delete</button>";
+      }
+
+      echo "<dd class='creation_date' >$video[creation_date]</dd>";
 
     } // end for each loop
 
 ?>
-
+  </dl>
 </div>
 <!-- END RIGHT COL -->
 

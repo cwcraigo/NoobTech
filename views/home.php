@@ -4,13 +4,12 @@
 * DATE:
 * DESCRIPTION:
 ************************************************************************ */
+session_start();
 
 // getting message if exists.
 if (!empty($_SESSION['error'])) {
 	$error = $_SESSION['error'];
 	unset($_SESSION['error']);
-} elseif (!empty($_SESSION['message'])) {
-	$message = $_SESSION['message'];
 }
 
 ?>
@@ -24,7 +23,7 @@ if (!empty($_SESSION['error'])) {
       <!-- RIGHT COL (suggestions/comments) -->
       <div class="span10 offset1" >
 
-        <div class="page-header"> <h2>Coming Soon</h2> </div>
+        <div class="page-header"> <h3>Coming Soon</h3> </div>
 
         <p class='text-error' > <?php if($error){ echo $error; unset($error); } ?> </p>
 

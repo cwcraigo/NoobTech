@@ -24,46 +24,41 @@ if (isset($_SESSION['s_array'])) {
 <?php require_once $current_dir.'/modules/header.php'; ?>
 
     <!-- LEFT COL (form/videos) -->
-    <div class="span4">
+    <div class="span3">
 
-      <div class="page-header"> <h2>Add a Suggestion</h2> </div>
+      <div class="page-header"> <h3>Add Suggestion</h3> </div>
 
       <form method="post" action=".">
-        <fieldset>
-          <!-- <legend>Suggestion Form</legend> -->
           <label class="control-label" for="tutorial_title">Tutorial Title: </label>
-          <input type="text" name="tutorial_title" id="tutorial_title" size="20" value="<?php echo $t_title; ?>" required /><br />
+          <input class="input-block-level" type="text" name="tutorial_title" id="tutorial_title" size="20" value="<?php echo $t_title; ?>" required /><br />
           <label class="control-label" for="tutorial_desc" >Tutorial Description: </label>
-          <textarea type="text" name="tutorial_desc" id="tutorial_desc" rows="5" required><?php echo $t_desc; ?></textarea><br />
+          <textarea class="input-block-level" type="text" name="tutorial_desc" id="tutorial_desc" rows="5" required><?php echo $t_desc; ?></textarea><br />
           <input class="btn btn-success" type="submit" name="submit" id="submit" value="Submit" />
           <input type="hidden" name="action" value="tutorial_form" />
-        </fieldset>
       </form>
 
     </div>
     <!-- END LEFT COL -->
 
     <!-- RIGHT COL (suggestions/comments) -->
-    <div class="span8" >
+    <div class="span9" >
 
-      <div class="page-header"> <h2>Tutorial Suggestions</h2> </div>
+      <div class="page-header"><h3>Tutorial Suggestions</h3></div>
 
       <p class='text-error' > <?php if($error){ echo $error; unset($error); } ?> </p>
 
-    <?php
-    foreach ($suggestion_array as $suggestion) {
+      <dl>
+      <?php
+      foreach ($suggestion_array as $suggestion) {
 
-      echo "
-         <ul class='suggestionbox' >
-             <li class='suggestion_title' >$suggestion[suggestion_title]</li>
-             <li class='suggestion_desc' >$suggestion[suggestion_desc]</li>
-             <li class='suggestion_info'>
-             Created on ".date("M j, Y g:ia", strtotime($suggestion['creation_date']))."</li>
-         </ul>";
-    }
-    unset($suggestion_array);
-    ?>
-
+        echo "<dt class='suggestion_title' >$suggestion[suggestion_title]</dt>
+              <dd class='suggestion_desc' >$suggestion[suggestion_desc]</dd>
+              <dd class='suggestion_info'>
+              Created on ".date("M j, Y g:ia", strtotime($suggestion['creation_date']))."</dd>";
+      }
+      unset($suggestion_array);
+      ?>
+      </dl>
 </div>
 <!-- END RIGHT COL -->
 

@@ -1,3 +1,10 @@
+<?php
+session_start();
+
+// var_dump($_SESSION['rights']);
+
+?>
+
 <!DOCTYPE HTML>
 <html>
   <head>
@@ -18,42 +25,47 @@
     <!-- HEADER ROW -->
     <div class='row-fluid'>
 
-      <!-- SUBTITLE -->
-      <!-- <span class='span5' id="sub_title" >FOR C.I.T. AND C.S. MAJORS AT BYU-IDAHO</span> -->
+      <div class="navbar navbar-inverse">
+        <div class="navbar-inner">
+          <div class="container">
 
-<div class="navbar navbar-inverse">
-  <div class="navbar-inner">
-    <div class="container">
+            <!-- TITLE -->
+            <a class='brand' id="main_title" href="#">NoobTech</a>
 
-      <!-- Be sure to leave the brand out there if you want it shown -->
-      <!-- <a class="brand" href="#">NoobTech</a> -->
-      <!-- TITLE -->
-      <a class='brand' id="main_title" href="#">NoobTech</a>
+            <!-- NAVIGATION -->
+            <ul class='nav'>
+              <li><a href="/index.php?action=home">HOME</a></li>
+              <li><a href="/index.php?action=suggestions">TUTORIAL SUGGESTIONS</a></li>
+              <li><a href="/index.php?action=tutorials">VIDEO TUTORIALS</a></li>
+            </ul>
 
-      <ul class='nav'>
-        <li><a href="/index.php?action=home">HOME</a></li>
-        <li><a href="/index.php?action=suggestions">TUTORIAL SUGGESTIONS</a></li>
-        <li><a href="/index.php?action=tutorials">VIDEO TUTORIALS</a></li>
-      </ul>
+            <form action='.' method='post' class='navbar-search'>
+                <input class='search-query span12' name='video_tag' placeholder='Search for a Video' />
+                <input type='hidden' name='action' value='search_videos'>
+            </form>
 
-      <form action='.' method='post' class='navbar-search'>
-          <input class='search-query span12' name='video_tag' placeholder='Search for a Video' />
-          <input type='hidden' name='action' value='search_videos'>
-      </form>
+            <?php if($_SESSION['rights'] == 1) { ?>
+              <a href="/index.php?action=logout"><button class='btn btn-inverse btn-mini pull-right' >Logout</button></a>
+            <?php } else { ?>
+              <button class='btn btn-inverse btn-mini pull-right' onclick='login_form()' >Login</button>
+            <?php } ?>
 
-    </div>
-  </div>
-</div>
-
-      <!-- NAVIGATION -->
-  <!--     <div class='span5 btn-group'>
-        <a class="btn btn-danger" href="/index.php?action=home">HOME</a>
-        <a class="btn btn-danger" href="/index.php?action=suggestions">TUTORIAL SUGGESTIONS</a>
-        <a class="btn btn-danger" href="/index.php?action=tutorials">VIDEO TUTORIALS</a>
-      </div> -->
-
+          </div>
+        </div>
+      </div>
     </div>
     <!-- END HEADER ROW -->
+
+    <div id='loginDiv'>
+      <form action='.' method='post' class='form-inline'>
+        <div class='controls controls-row'>
+          <input class='input-medium' type='email' name='email' placeholder='Email' required />
+          <input class='input-medium' type="password" name='password' placeholder='Password' required />
+          <button class='btn btn-medium btn-info' type='submit' >Login</button>
+          <input type='hidden' name='action' value='login'>
+        </div>
+      </form>
+    </div>
 
     <!-- CONTENT ROW -->
     <div class="row-fluid">

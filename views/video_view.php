@@ -26,7 +26,7 @@ if (isset($_SESSION['video'])) {
 
   <p class='text-error' > <?php if($error){ echo $error; unset($error); } ?> </p>
 
-  <div class='page-header'> <h2><?php echo $video[video_title]; ?></h2> </div>
+  <div class='page-header'> <h3><?php echo $video[video_title]; ?></h3> </div>
 
   <div class="embeddedVideo">
     <object classid='clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B' width="600" height="400"

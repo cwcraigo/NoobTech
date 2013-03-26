@@ -65,6 +65,11 @@ body
 	color: white;
 }
 
+#loginDiv
+{
+	display: none;
+}
+
 #content
 {
 
