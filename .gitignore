@@ -19,5 +19,5 @@ lib/bootstrap/*
 
 *.png
 
-
+*/DBconn.php
 
