@@ -7,7 +7,7 @@
 
 $server 	= 'localhost';
 $user 		= 'cwcraigo_iAdmin';
-$password = 'z=HsF6U{9hTg';
+$password = '***********';
 $db 			= 'cwcraigo_intro2techdb';
 
 $myConn = new mysqli($server, $user, $password, $db);
