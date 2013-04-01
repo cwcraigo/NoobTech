@@ -15,6 +15,77 @@ if(file_exists("$current_dir/lib/DBconn.php")) {
 }
 
 /* *********************
+* edit_video()
+************************ */
+function edit_video($video_id, $video_title, $video_desc, $video_length) {
+  global $myConn, $db, $current_dir;
+
+  $sql = "UPDATE video
+            SET video_title = ?
+            ,   video_desc  = ?
+            ,   video_length = ?
+            ,   last_updated_by = ?
+            ,   last_update_date = UTC_DATE()
+            WHERE video_id = ?";
+
+  $stmt = $myConn->prepare($sql);
+
+  if ($stmt) {
+    $stmt->bind_param('sssii', $video_title, $video_desc, $video_length, $video_id);
+    $stmt->execute();
+    $rowschanged = $stmt->affected_rows;
+    $stmt->close();
+  } else {
+    // $_SESSION['error'] = __FILE__." ".__FUNCTION__." stmt did not prepare.";
+    echo "500 Error! U-VIDEO";
+    include_once $current_dir.'/views/errorDocs/500.php';
+    exit;
+  } //end prepared stmt
+
+  if ($rowschanged == 1) {
+    return 0;
+  } else {
+    return FALSE;
+  }
+
+} // end function
+
+/* *********************
+* delete_video()
+************************ */
+function delete_video($video_id) {
+  global $myConn, $db, $current_dir;
+
+  $sql = "UPDATE video
+            SET active_flag = 'N'
+            ,   last_updated_by = ?
+            ,   last_update_date = UTC_DATE()
+            WHERE video_id = ?";
+
+  $stmt = $myConn->prepare($sql);
+
+  if ($stmt) {
+    $stmt->bind_param('sssii', $video_title, $video_desc, $video_length, $video_id);
+    $stmt->execute();
+    $rowschanged = $stmt->affected_rows;
+    $stmt->close();
+  } else {
+    // $_SESSION['error'] = __FILE__." ".__FUNCTION__." stmt did not prepare.";
+    echo "500 Error! U-VIDEO";
+    include_once $current_dir.'/views/errorDocs/500.php';
+    exit;
+  } //end prepared stmt
+
+  if ($rowschanged == 1) {
+    return 0;
+  } else {
+    return FALSE;
+  }
+
+} // end function
+
+
+/* *********************
 * login()
 ************************ */
 function login($email, $password) {
@@ -24,7 +95,7 @@ function login($email, $password) {
   // $new_password = $password;
   // var_dump($new_password); exit;
 
-  $sql = "SELECT user_rights
+  $sql = "SELECT user_rights, user_id
            FROM  user
            WHERE email = ?
            AND   password = ?";
@@ -33,10 +104,11 @@ function login($email, $password) {
 
   if ($stmt) {
     $stmt->bind_param('ss', $email, $new_password);
-    $stmt->bind_result($rights);
+    $stmt->bind_result($rights,$id);
     $stmt->execute();
     if($stmt->fetch()) {
-      $user_rights = $rights;
+      $user_info['user_rights'] = $rights;
+      $user_info['user_id'] = $id;
     }
     $stmt->close();
   } else {
@@ -46,8 +118,8 @@ function login($email, $password) {
     exit;
   } //end prepared stmt
 
-  if (!empty($user_rights)) {
-    return $user_rights;
+  if (!empty($user_info)) {
+    return $user_info;
   } else {
 
     $sql = "INSERT INTO user

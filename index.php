@@ -8,9 +8,9 @@
 session_start();
 $_SESSION['session_id'] = session_id();
 
-if (!isset($_SESSION['rights'])) {
-	$_SESSION['rights'] = 0;
-}
+// if (!isset($_SESSION['rights'])) {
+// 	$_SESSION['rights'] = 0;
+// }
 
 
 // GLOBAL DECLARATIONS
@@ -63,7 +63,7 @@ if ($action == 'home') {
 **************************************************************************** */
 else if ($action == 'logout') {
 
-	$_SESSION['rights'] = 0;
+	unset($_SESSION['rights']);
 
 	$_SESSION['error'] = 'Logout Success!';
 
@@ -86,9 +86,11 @@ else if ($action == 'login') {
 
 	if ($user_rights === FALSE) {
 		$_SESSION['rights'] = 0;
+		$_SESSION['user_id'] = -1;
 		$_SESSION['error'] = 'Login Failed. Please try again. OR Please enter valid byui email address.';
 	} else {
-		$_SESSION['rights'] = $user_rights;
+		$_SESSION['rights'] = $user_rights['user_rights'];
+		$_SESSION['user_id'] = $user_rights['user_id'];
 		$_SESSION['error'] = 'Login Success!';
 	}
 

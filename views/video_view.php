@@ -24,9 +24,9 @@ if (isset($_SESSION['video'])) {
 <!-- RIGHT COL (suggestions/comments) -->
 <div class="span10 offset1" >
 
-  <p class='text-error' > <?php if($error){ echo $error; unset($error); } ?> </p>
+   <?php if($error){ echo "<p class='alert alert-error' >$error</p>"; unset($error); } ?>
 
-  <div class='page-header'> <h3><?php echo $video[video_title]; ?></h3> </div>
+  <div class='page-header'> <h2><?php echo $video['video_title']; ?></h2> </div>
 
   <div class="embeddedVideo">
     <object classid='clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B' width="600" height="400"
@@ -41,6 +41,17 @@ if (isset($_SESSION['video'])) {
     </embed>
     </object>
   </div>
+
+  <?php  ?>
+
+  <dl class="home_list dl-horizontal" >
+    <dt class='video_title'>Description:</dt>
+    <dd class='video_desc'><?php echo $video['video_desc']; ?></dd>
+    <dt class='video_title'>Length:</dt>
+    <dd class='video_desc'><?php echo $video['video_length']; ?></dd>
+    <dt class='video_title'>Creation Date:</dt>
+    <dd ><?php echo date("M j, Y g:ia", strtotime($video['creation_date'])); ?></dd>
+  </dl>
 
 </div>
 

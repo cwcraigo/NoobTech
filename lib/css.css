@@ -17,74 +17,138 @@ font-family: 'Audiowide', cursive;
 body
 {
 	margin: 0;
-	background-image: url('http://routerconfig.cwcraigo.com/pics/carbonFiber4.jpeg');
-	background-repeat: repeat;
+	background-image: url('../pics/8BitMac.jpeg');
+	background-size: 100%;
 	color: white;
+	/*background-color: grey;*/
+	font-size: 14pt;
 	font-family: 'Source Code Pro', sans-serif;
-
+	height:100%;
 }
 
 /* holds all other divs */
 #container
 {
-	margin: 10px auto;
-	width: 1000px;
-	min-height: 675px;
-	background: rgba(0,0,0,0.4);
+	min-height: 100%;
+	/*background: rgba(0,0,0,0.5);*/
 
 }
 
 /* holds nav, main_title */
 #header
 {
+	margin-top: 1%;
+}
 
+#myNavBar
+{
+	margin-top: 1%;
 }
 
 /* holds all links */
-#nav
+.nav
 {
-
+	font-size: 10pt;
 }
 
 #main_title
 {
-	/*border: solid thin blue;*/
-	color: #98ED00;
-	width: 450px;
+	color: #FF6A00;
 	font-family: 'Audiowide', cursive;
 	font-size: 48pt;
-	text-align: right;
-	/*font-family: 'Black Ops One', cursive;*/
-	/*font-family: 'Stalinist One', cursive;*/
+	padding: 1.5%;
+	text-shadow: 3px 3px 10px #abf000;
+	text-align: center;
+
+	/*border: solid thin red;*/
 }
 
-#sub_title
+#content
+{
+	border-left: solid thin white;
+	border-right: solid thin white;
+	border-bottom: solid thin white;
+	background-color: black;
+	/*background: rgba(0,0,0,0.9);*/
+	overflow: scroll;
+	margin-bottom: 10px;
+
+	min-height: 525px;
+	max-height: 525px;
+	/*height: 100%;*/
+	/*margin-bottom: 10px;*/
+
+}
+
+#terminal_top
+{
+	margin-bottom: 0;
+	color: black;
+	/*border: solid thin red;*/
+}
+
+#terminal_heading
+{
+	font-size: 10pt;
+	/*border: solid thin red;*/
+}
+
+#terminal_buttons2
+{
+	/*border: solid thin green;*/
+	/*margin-left: 0;*/
+}
+
+#terminal_buttons2 li
+{
+	/*border: solid thin yellow;*/
+}
+
+#terminal_top2
+{
+	/*margin-top: 15%;*/
+
+	/*border: solid thin red;*/
+}
+
+#fullscreen2
+{
+	/*border: solid thin blue;*/
+	/*padding: 0;*/
+}
+
+h2
 {
 	font-family: 'Black Ops One', cursive;
-	font-size: 9pt;
-	color: white;
+	color: #fb3f51;
+	margin-bottom: 0;
+	text-align: center;
+	text-shadow: 3px 3px 20px #FF6A00;
+	/*border-top: solid thin white;*/
 }
 
 #loginDiv
 {
 	display: none;
-}
-
-#content
-{
-
+	background-color: orange;
+	position: absolute;
+	right: 2%;
+	width: 40%;
+	padding-top: 1%;
+	padding-left: 0.5%;
+	padding-right: 0.5%;
+	z-index: 1;
 }
 
 .suggestionbox
 {
 	width: 500px;
-	/*border: solid thin orange;*/
 }
 
 .suggestion_title
 {
 	text-decoration: underline;
-	color: red;
+	color: #abf000;
 }
 
 .suggestion_desc
@@ -101,6 +165,12 @@ body
 	font-size: 7pt;
 }
 
+.video_title a
+{
+	text-decoration: underline;
+	color: #abf000;
+}
+
 dl
 {
 	list-style-type: none;
@@ -109,17 +179,17 @@ dl
 .home_list dt
 {
 	text-decoration: underline;
-	color: orange;
+	color: #abf000;
 }
 
-h1 a:hover
+a
 {
 	text-decoration: none;
 }
 
 #footer
 {
-
+	border: solid thin red;
 }
 
 

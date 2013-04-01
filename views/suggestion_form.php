@@ -1,4 +1,5 @@
 <?php
+session_start();
 /* * ******************************************
  * Suggestion Form View
  * ****************************************** */
@@ -19,33 +20,27 @@ if (isset($_SESSION['s_array'])) {
     unset($s_array);
 }
 
+$page_heading = 'SUGGESTIONS';
+$page_icon = 'icon-th-list';
+
 ?>
 
 <?php require_once $current_dir.'/modules/header.php'; ?>
 
     <!-- LEFT COL (form/videos) -->
-    <div class="span3">
+    <!-- <div class="span3"> -->
 
-      <div class="page-header"> <h3>Add Suggestion</h3> </div>
 
-      <form method="post" action=".">
-          <label class="control-label" for="tutorial_title">Tutorial Title: </label>
-          <input class="input-block-level" type="text" name="tutorial_title" id="tutorial_title" size="20" value="<?php echo $t_title; ?>" required /><br />
-          <label class="control-label" for="tutorial_desc" >Tutorial Description: </label>
-          <textarea class="input-block-level" type="text" name="tutorial_desc" id="tutorial_desc" rows="5" required><?php echo $t_desc; ?></textarea><br />
-          <input class="btn btn-success" type="submit" name="submit" id="submit" value="Submit" />
-          <input type="hidden" name="action" value="tutorial_form" />
-      </form>
 
-    </div>
+    <!-- </div> -->
     <!-- END LEFT COL -->
 
     <!-- RIGHT COL (suggestions/comments) -->
-    <div class="span9" >
+    <div class="span10 offset1" >
 
-      <div class="page-header"><h3>Tutorial Suggestions</h3></div>
+      <div class="page-header"><h2>Tutorial Suggestions</h2></div>
 
-      <p class='text-error' > <?php if($error){ echo $error; unset($error); } ?> </p>
+      <?php if($error){ echo "<p class='alert alert-error' >$error</p>"; unset($error); } ?>
 
       <dl>
       <?php
@@ -59,6 +54,22 @@ if (isset($_SESSION['s_array'])) {
       unset($suggestion_array);
       ?>
       </dl>
+
+      <div class="page-header"> <h2>Add Suggestion</h2> </div>
+<?php if(isset($_SESSION['rights'])) { ?>
+      <form method="post" action=".">
+          <label class="control-label" for="tutorial_title">Tutorial Title: </label>
+          <input class="input-block-level" type="text" name="tutorial_title" id="tutorial_title" size="20" value="<?php echo $t_title; ?>" required /><br />
+          <label class="control-label" for="tutorial_desc" >Tutorial Description: </label>
+          <textarea class="input-block-level" type="text" name="tutorial_desc" id="tutorial_desc" rows="5" required><?php echo $t_desc; ?></textarea><br />
+          <input class="btn btn-success" type="submit" name="submit" id="submit" value="Submit" />
+          <input type="hidden" name="action" value="tutorial_form" />
+      </form>
+<?php } else {
+
+  echo "<p class='alert alert-info' >To add a suggestion, please login with a valid BYUI email address.</p>";
+}
+  ?>
 </div>
 <!-- END RIGHT COL -->
 

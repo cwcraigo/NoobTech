@@ -12,6 +12,9 @@ if (!empty($_SESSION['error'])) {
 	unset($_SESSION['error']);
 }
 
+$page_heading = 'HOME';
+$page_icon = 'icon-home';
+
 ?>
 
 <?php require_once $current_dir.'/modules/header.php'; ?>
@@ -23,9 +26,9 @@ if (!empty($_SESSION['error'])) {
       <!-- RIGHT COL (suggestions/comments) -->
       <div class="span10 offset1" >
 
-        <div class="page-header"> <h3>Coming Soon</h3> </div>
+        <div class="page-header"> <h2>Coming Soon</h2> </div>
 
-        <p class='text-error' > <?php if($error){ echo $error; unset($error); } ?> </p>
+        <?php if($error){ echo "<p class='alert alert-error' >$error</p>"; unset($error); } ?>
 
         <dl class='home_list'> <!-- Description List -->
         	<dt>Pictures</dt> <!-- Description Title -->
