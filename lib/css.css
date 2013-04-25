@@ -71,12 +71,9 @@ body
 	background-color: black;
 	/*background: rgba(0,0,0,0.9);*/
 	overflow: scroll;
-	margin-bottom: 10px;
 
 	min-height: 525px;
-	max-height: 525px;
-	/*height: 100%;*/
-	/*margin-bottom: 10px;*/
+	max-height: 600px;
 
 }
 
@@ -115,6 +112,18 @@ body
 {
 	/*border: solid thin blue;*/
 	/*padding: 0;*/
+}
+
+#edit_tutorial_form label
+{
+	color: #abf000;
+	font-size: 14pt;
+}
+
+#edit_suggestion_form label
+{
+	color: #abf000;
+	font-size: 14pt;
 }
 
 h2
@@ -191,13 +200,3 @@ a
 {
 	border: solid thin red;
 }
-
-
-
-
-
-
-
-
-
-

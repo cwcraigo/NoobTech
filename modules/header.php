@@ -1,6 +1,11 @@
 <?php
 session_start();
 
+if (!empty($_SESSION['error'])) {
+  $error = $_SESSION['error'];
+  unset($_SESSION['error']);
+}
+
 // var_dump($_SESSION['rights']);
 // var_dump($_SESSION['user_id']);
 
@@ -10,6 +15,7 @@ session_start();
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="icon" type="image/png" href="pics/noobicon_gameboy.png">
       <title>NoobTech</title>
       <!-- Bootstrap -->
       <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
@@ -49,14 +55,12 @@ session_start();
                 </form>
               </div>
 
-              <ul class='nav' id="fullscreen2">
-                <li class="divider-vertical"></li>
-                <?php if($_SESSION['rights'] == 1) { ?>
-                  <li><button class='btn btn-inverse btn-mini' ><a href="/index.php?action=logout"><i class="icon-off icon-white"></i>Logout</a></button></li>
-                <?php } else { ?>
-                  <li><button class='btn btn-inverse btn-mini' onclick='login_form()' ><i class="icon-user icon-white"></i>Login</button></li>
-                <?php } ?>
-              </ul>
+              <?php if($_SESSION['rights'] == 1) { ?>
+                <a class="btn btn-inverse btn-mini" href="/index.php?action=logout"><i class="icon-off icon-white"></i>Logout</a>
+              <?php } else { ?>
+                <button class='btn btn-inverse btn-mini' onclick='login_form()' ><i class="icon-user icon-white"></i>Login</button>
+              <?php } ?>
+
             <!-- </div> -->
 
           </div>

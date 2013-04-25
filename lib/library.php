@@ -31,11 +31,6 @@ function email_check($email) {
   return $email;
 }
 
-
-
-
-
-
 /**********************************************************
  * Temporary image library
  *********************************************************/
@@ -171,7 +166,5 @@ function resize_image($old_image_path, $new_image_path, $max_width, $max_height)
  // Free any memory associated with the old image
  imagedestroy($old_image);
 }
-
-
 
 ?>

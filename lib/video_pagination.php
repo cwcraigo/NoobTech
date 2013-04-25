@@ -1,46 +1,32 @@
 <?php
-/* * ******************************************
- * Suggestion Form View
- * ****************************************** */
+
 session_start();
 
-if (isset($_SESSION['video_message'])) {
-    $error = $_SESSION['video_message'];
-    unset($_SESSION['video_message']);
-}
-if (isset($_SESSION['video_array'])) {
-    $video_array = $_SESSION['video_array'];
-    unset($_SESSION['video_array']);
-}
-if (!empty($_SESSION['error'])) {
-  $error = $_SESSION['error'];
-  unset($_SESSION['error']);
+$current_dir = $_SERVER['DOCUMENT_ROOT'];
+
+if(file_exists("$current_dir/lib/model.php")) {
+  include_once $current_dir.'/lib/model.php';
+} else {
+	echo 'movie_search - model 404 Error!';
 }
 
-$page_heading = 'TUTORIALS';
-$page_icon = 'icon-film';
+$per_page = 5;
 
-$totalviews = $_SESSION['totalviews'];
-$total = $_SESSION['total_videos'];
+$total = get_video_count();
 
-?>
+$totalviews = ceil($total / $per_page);
 
-<?php require_once $current_dir.'/modules/header.php'; ?>
+$page = (isset($_GET['page'])) ? (int) $_GET['page'] : 1;
 
-<!-- TOP ROW (LIST OF TUTORIALS) -->
-<div class="span10 offset1" >
+$start = ($page - 1) * $per_page;
 
-  <!-- TITLE -->
-  <div class='page-header'> <h2>Videos</h2> </div>
+$video_array = get_videos($start, $per_page);
 
-  <!-- ERROR/MESSAGE -->
-  <?php if($error){ echo "<p class='alert alert-error' >$error</p>"; unset($error); } ?>
+$str = "";
 
-<div id="video_div">
-<?php
-    foreach ($video_array as $video) {
-      if ($_SESSION['rights'] == 1) {
-        echo "<form action='.' method='post' class='form-horizontal' id='edit_tutorial_form'>
+foreach ($video_array as $video) {
+	if ($_SESSION['rights'] == 1) {
+		$str .= "<form action='.' method='post' class='form-horizontal' id='edit_tutorial_form'>
                 <div class='control-group'>
                   <label class='control-label' for='video_title' >Title:</label>
                   <div class='controls'>
@@ -77,11 +63,9 @@ $total = $_SESSION['total_videos'];
                     <a class='btn btn-danger btn-mini' href='/index.php?action=delete_video&video_id=$video[video_id]' ><i class='icon-remove-circle icon-white'></i>Delete</a>
                   </div>
                 </div>
-              </form>
-              <br><br>";
-
-      } else {
-        echo "<ul class='media-list'>
+              </form><br><br>";
+	} else {
+	$str .= "<ul class='media-list'>
                 <li class='media'>
                   <a class='pull-left' href='#'>
                     <object classid='clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B'
@@ -124,59 +108,37 @@ $total = $_SESSION['total_videos'];
                   </div>
                 </li>
               </ul>";
-      } // end rights check
-    } // end for each loop
+	    }
+} // end foreach
 
-// PAGINATION CHECK
-if ($totalviews != 0) { ?>
+// <!-- PAGINATION -->
+if ($totalviews != 0) {
+$str .= "<div class='pagination pagination-centered' >
+				<ul>
+    			<li>
+    				<a href='#' onclick='video_pagination(1)' >&laquo;</a>
+    			</li>";
 
-  <!-- PAGINATION -->
-  <div class='pagination pagination-centered' >
-    <ul>
-      <li><a href="#" onclick="video_pagination(1)" >&laquo;</a></li>
-    <?php
-      for ($i=1;$i<=$totalviews;$i++) {
-        if ($i == 1) {
-          echo "<li class='active' ><a href='#' onclick='video_pagination($i)' >$i</a></li>";
-        } else {
-          echo "<li><a href='#' onclick='video_pagination($i)' >$i</a></li>";
-        }
-      } // end loop ?>
-      <li><a href="#" onclick="video_pagination(<?php echo $totalviews; ?>)" >&raquo;</a></li>
-    </ul>
-  </div>
-  <!-- END PAGINATION DIV -->
-<?php } // end pagination check ?>
-</div>
-<!-- END VIDEO DIV -->
+for ($i=1;$i<=$totalviews;$i++) {
+	if ($page == $i) {
+		$str .= "<li class='active' >
+	  					<a href='#' onclick='video_pagination($i)' >$i</a>
+	  				</li>";
+	}	else {
+		$str .= "<li>
+							<a href='#' onclick='video_pagination($i)' >$i</a>
+						</li>";
+	}
 
-<!-- ADD VIDEO FORM -->
-<?php if($_SESSION['rights'] == 1) { ?>
-  <div class="page-header"> <h2>Add Video</h2> </div>
-  <form method="post" action="." class='form-horizontal' id='add_video_form'>
-    <div class='control-group'>
-      <label class="control-label" for="video_title">Video Title: </label>
-      <div class='controls'>
-        <input class="input-xlarge" type="text" name="video_title" id="video_title" required /><br />
-      </div>
-    </div>
-    <div class='control-group'>
-      <label class="control-label" for="video_desc" >Video Description: </label>
-      <div class='controls'>
-        <textarea class="input-block-level" type="text" name="video_desc" id="video_desc" required></textarea><br />
-      </div>
-    </div>
-    <div class='control-group'>
-      <label class="control-label" for="video_length">Video Length: </label>
-      <div class='controls'>
-        <input class='input-small' type="text" name="video_length" id="video_length" required /><br />
-      </div>
-    </div>
-      <input class="btn btn-success" type="submit" name="submit" id="submit" value="Submit" />
-      <input type="hidden" name="action" value="add_video_form" />
-  </form>
-<?php } // end rights check ?>
-</div>
-<!-- END RIGHT COL -->
+} // end loop
 
-<?php require_once $current_dir.'/modules/footer.php'; ?>
+$str .= "<li>
+					<a href='#' onclick='video_pagination($totalviews)' >&raquo;</a>
+				</li>
+			</ul>
+			</div>";
+}
+
+echo $str;
+
+?>

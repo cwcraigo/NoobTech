@@ -8,11 +8,6 @@
 session_start();
 $_SESSION['session_id'] = session_id();
 
-// if (!isset($_SESSION['rights'])) {
-// 	$_SESSION['rights'] = 0;
-// }
-
-
 // GLOBAL DECLARATIONS
 $current_dir = $_SERVER['DOCUMENT_ROOT']; // gets current directory name
 
@@ -47,11 +42,150 @@ if (!empty($_POST['action'])) {
 
 // ----------------------------------------------------------------------------
 /* ****************************************************************************
-* COMMENT GOES HERE
+* HOME BUTTON
 **************************************************************************** */
 if ($action == 'home') {
 
 	include $current_dir.'/views/home.php';
+	exit;
+}
+
+// ----------------------------------------------------------------------------
+/* ****************************************************************************
+* EDIT SUGGESTION INFO
+**************************************************************************** */
+else if ($action == 'edit_suggestion') {
+
+	$suggestion_id = string_check($_POST['suggestion_id']);
+	$suggestion_title = string_check($_POST['suggestion_title']);
+	$suggestion_desc = string_check($_POST['suggestion_desc']);
+
+	$result = edit_suggestion($suggestion_id, $suggestion_title, $suggestion_desc);
+
+	if ($result == TRUE) {
+		$_SESSION['error'] = 'Edit Success!';
+	} else {
+		$_SESSION['error'] = 'Edit Failed. Please try again.';
+	}
+
+	$suggestion_array = array();
+	$suggestion_array = get_suggestions();
+
+	if ($suggestion_array == FALSE) {
+		$_SESSION['error'] = 'Could not retrieve videos.';
+	} else {
+		$_SESSION['suggestion_array'] = $suggestion_array;
+	}
+// var_dump($result); exit;
+
+	include $current_dir.'/views/suggestion_form.php';
+	exit;
+}
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
+
+// ----------------------------------------------------------------------------
+/* ****************************************************************************
+* COMMENT GOES HERE
+**************************************************************************** */
+else if ($action == 'comment_form') {
+
+	$video_id = string_check($_POST['video_id']);
+	$comment_text = string_check($_POST['comment_text']);
+
+	$result = insert_comment($comment_text, $video_id);
+
+	if ($result == FALSE) {
+		$_SESSION['error'] = 'Could not insert comment. Please try again.';
+	} else {
+		$_SESSION['error'] = 'Insert Success!';
+	}
+
+	$video = array();
+	$comment_array = array();
+	$video = get_video_by_id($video_id);
+	$comment_array = get_comments(1,5,$video_id);
+	$_SESSION['video'] = $video;
+	$_SESSION['comment_array'] = $comment_array;
+	$like_count = get_like_count('video',$video_id);
+	$_SESSION['like_count'] = $like_count;
+
+	$per_page = 5;
+
+	$total = get_comment_count($video_id);
+
+	$totalviews = ceil($total / $per_page);
+
+	$_SESSION['total_videos'] = $total;
+	$_SESSION['totalviews'] = $totalviews;
+
+	include $current_dir.'/views/video_view.php';
+	exit;
+}
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
+
+
+// ----------------------------------------------------------------------------
+/* ****************************************************************************
+* COMMENT GOES HERE
+**************************************************************************** */
+else if ($action == 'delete_suggestion') {
+
+	$suggestion_id = string_check($_GET['suggestion_id']);
+
+	$result = delete_suggestion($suggestion_id);
+
+	if ($result == TRUE) {
+		$_SESSION['error'] = 'Delete Success!';
+	} else {
+		$_SESSION['error'] = 'Delete Failed. Please try again.';
+	}
+
+	$suggestion_array = array();
+	$suggestion_array = get_suggestions();
+
+	if ($suggestion_array == FALSE) {
+		$_SESSION['error'] = 'Could not retrieve videos.';
+	} else {
+		$_SESSION['suggestion_array'] = $suggestion_array;
+	}
+
+	include $current_dir.'/views/suggestion_form.php';
+	exit;
+}
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
+
+// ----------------------------------------------------------------------------
+/* ****************************************************************************
+* COMMENT GOES HERE
+**************************************************************************** */
+else if ($action == 'delete_video') {
+
+	$video_id = string_check($_GET['video_id']);
+
+	$result = delete_video($video_id);
+
+	if ($result == TRUE) {
+		$_SESSION['error'] = 'Delete Success!';
+	} else {
+		$_SESSION['error'] = 'Delete Failed. Please try again.';
+	}
+
+	$video_array = array();
+	$video_array = get_videos();
+
+	if ($video_array == FALSE) {
+		$_SESSION['video_message'] = 'Could not retrieve videos.';
+	} else {
+		$_SESSION['video_array'] = $video_array;
+	}
+
+	include $current_dir.'/views/video_tutorial.php';
 	exit;
 }
 // ----------------------------------------------------------------------------
@@ -59,11 +193,50 @@ if ($action == 'home') {
 
 // ----------------------------------------------------------------------------
 /* ****************************************************************************
-* COMMENT GOES HERE
+* EDIT VIDEO INFO
+**************************************************************************** */
+else if ($action == 'edit_video') {
+
+	$video_id = $_POST['video_id'];
+	$video_title = $_POST['video_title'];
+	$video_url = $_POST['video_url'];
+	$video_desc = $_POST['video_desc'];
+	$video_length = $_POST['video_length'];
+
+	$result = edit_video($video_id, $video_title, $video_url, $video_desc, $video_length);
+
+	if ($result == TRUE) {
+		$_SESSION['error'] = 'Edit Success!';
+	} else {
+		$_SESSION['error'] = 'Edit Failed. Please try again.';
+	}
+
+	$video_array = array();
+	$video_array = get_videos();
+
+	if ($video_array == FALSE) {
+		$_SESSION['video_message'] = 'Could not retrieve videos.';
+	} else {
+		$_SESSION['video_array'] = $video_array;
+	}
+// var_dump($result); exit;
+
+	include $current_dir.'/views/video_tutorial.php';
+	exit;
+}
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
+// ----------------------------------------------------------------------------
+/* ****************************************************************************
+* LOGOUT
 **************************************************************************** */
 else if ($action == 'logout') {
 
 	unset($_SESSION['rights']);
+	$_SESSION['user_id'] = -1;
 
 	$_SESSION['error'] = 'Logout Success!';
 
@@ -75,7 +248,7 @@ else if ($action == 'logout') {
 
 // ----------------------------------------------------------------------------
 /* ****************************************************************************
-* COMMENT GOES HERE
+* LOGIN
 **************************************************************************** */
 else if ($action == 'login') {
 
@@ -102,11 +275,19 @@ else if ($action == 'login') {
 
 // ----------------------------------------------------------------------------
 /* ****************************************************************************
-* COMMENT GOES HERE
+* SUGGESTION LINK
 **************************************************************************** */
 else if ($action == 'suggestions') {
 
 	$suggestion_array = get_suggestions();
+	$per_page = 5;
+
+	$total = get_suggestion_count();
+
+	$totalviews = ceil($total / $per_page);
+
+	$_SESSION['total_suggestions'] = $total;
+	$_SESSION['totalviews'] = $totalviews;
 
 	if ($suggestion_array == FALSE) {
 		$_SESSION['suggestion_message'] = 'Could not retrieve suggestions.';
@@ -122,7 +303,7 @@ else if ($action == 'suggestions') {
 
 // ----------------------------------------------------------------------------
 /* ****************************************************************************
-* COMMENT GOES HERE
+* VIDEO LINK
 **************************************************************************** */
 else if ($action == 'tutorial_form') {
 
@@ -153,12 +334,21 @@ else if ($action == 'tutorial_form') {
 
 // ----------------------------------------------------------------------------
 /* ****************************************************************************
-* COMMENT GOES HERE
+* TUTORIAL LINK
 **************************************************************************** */
 else if ($action == 'tutorials') {
 
 	$video_array = array();
 	$video_array = get_videos();
+
+	$per_page = 5;
+
+	$total = get_video_count();
+
+	$totalviews = ceil($total / $per_page);
+
+	$_SESSION['total_videos'] = $total;
+	$_SESSION['totalviews'] = $totalviews;
 
 	if ($video_array == FALSE) {
 		$_SESSION['video_message'] = 'Could not retrieve videos.';
@@ -174,7 +364,7 @@ else if ($action == 'tutorials') {
 
 // ----------------------------------------------------------------------------
 /* ****************************************************************************
-* COMMENT GOES HERE
+* VIDEO SEARCH
 **************************************************************************** */
 else if ($action == 'search_videos') {
 
@@ -198,21 +388,38 @@ else if ($action == 'search_videos') {
 
 // ----------------------------------------------------------------------------
 /* ****************************************************************************
-* COMMENT GOES HERE
+* VIDEO LINK
 **************************************************************************** */
 else if ($action == 'video_link') {
 
 	$video_id = string_check($_GET['video_id']);
 
-	$video = array();
-	$video = get_video_by_id($video_id);
+	$_SESSION['video_id'] = $video_id;
 
-	if ($video == FALSE) {
+	$video = array();
+	$comment_array = array();
+	$video = get_video_by_id($video_id);
+	$comment_array = get_comments(1,5,$video_id);
+
+	$like_count = get_like_count('video',$video_id);
+	$_SESSION['like_count'] = $like_count;
+
+	$per_page = 5;
+
+	$total = get_comment_count($video_id);
+
+	$totalviews = ceil($total / $per_page);
+
+	$_SESSION['total_videos'] = $total;
+	$_SESSION['totalviews'] = $totalviews;
+
+	if ($video == FALSE && $comment_array == FALSE) {
 		$_SESSION['video_message'] = 'Could not retrieve video.';
 		include $current_dir.'/views/video_tutorial.php';
 		exit;
 	} else {
 		$_SESSION['video'] = $video;
+		$_SESSION['comment_array'] = $comment_array;
 		include $current_dir.'/views/video_view.php';
 		exit;
 	}
@@ -224,27 +431,23 @@ else if ($action == 'video_link') {
 
 // ----------------------------------------------------------------------------
 /* ****************************************************************************
-* COMMENT GOES HERE
+* DEFAULT HOME
 **************************************************************************** */
 else {
-	// $_SESSION['error'] = 'No Action performed.';
+
+	$_SESSION['user_id'] = -1;
+
+	$total = get_video_count();
+
+	$video_id = rand(0,$total);
+
+	$video = get_featured_video($video_id);
+
+	$_SESSION['featured_video'] = $video;
+
 	include $current_dir.'/views/home.php';
 	exit;
 }
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
-
-
-
-
-
-
-
-
 ?>
-
-
-
-
-
-
